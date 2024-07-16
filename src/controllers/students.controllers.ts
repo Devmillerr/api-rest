@@ -2,12 +2,15 @@ import { Response, Request } from "express";
 import { PrismaClient } from '@prisma/client';
 import { StudentServices } from '../services/database/students.services';
 
-const prisma = new PrismaClient();
 const studentServices = new StudentServices();
+
+const prisma = new PrismaClient();
 
 export class StudentController {
     async getAll(req: Request, res: Response) {
-        const students = await studentServices.getAll();
+        const students = await studentServices.getAll({
+            studentdetailsId:  req.params.id,
+        });
         res.json({
             data: students,
         });

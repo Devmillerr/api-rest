@@ -37,10 +37,10 @@ model students {
 }
 
 model studentDetails {
-  id       String @id @default(uuid())
-  names    String
-  surnames String
-  age      String
+  id        String @id @default(uuid())
+  firstname String
+  lastname  String
+  age       String
 
   student   students?
   updatedAT DateTime  @updatedAt
