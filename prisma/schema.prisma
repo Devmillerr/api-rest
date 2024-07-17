@@ -13,14 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model courses {
-  id          String     @id @default(uuid())
-  name        String
-  description String
-  duration    Int
-  students    students[]
-}
-
 model students {
   id        String   @id @default(uuid())
   email     String   @unique
@@ -40,8 +32,16 @@ model studentDetails {
   id        String @id @default(uuid())
   firstname String
   lastname  String
-  age       String
+  age       Int?
 
   student   students?
   updatedAT DateTime  @updatedAt
+}
+
+model courses {
+  id          String     @id @default(uuid())
+  name        String
+  description String
+  duration    Int
+  students    students[]
 }
