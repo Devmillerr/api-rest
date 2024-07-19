@@ -29,15 +29,34 @@ export class StudentController {
         });
     }
 
-    async create(req: Request, res: Response) {
-        const newStudent = await studentServices.create({
-            email: req.body.email,
-            password: req.body.password,
+    async createStudent(req: Request, res: Response) {
+        const newUser = await studentServices.create({
+          email: req.body.email,
+          password: req.body.password,
         });
         res.json({
-            data: newStudent,
+          data: newUser,
         });
-    }
+      }
+    
+    
+
+    async create(req: Request, res: Response) {
+    
+        const { email, password, courseId } = req.body;
+        if (!courseId) {
+          return res.status(400).json({ error: 'Course ID is required' });
+        }
+    
+        const newStudent = await studentServices.createStudentWithCourse(
+          { email, password }, 
+          courseId
+        );
+        res.json({
+          data: newStudent,
+        });
+      } 
+      
 
     async update(req: Request, res: Response) {
         let body = req.body

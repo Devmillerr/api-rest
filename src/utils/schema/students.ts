@@ -1,5 +1,4 @@
 import Joi from "joi";  
-import { students } from '@prisma/client';
 
 export const STUDENT_CREATE_SCHEMA = Joi.object({
     email: Joi.string()
