@@ -1,4 +1,5 @@
 import Joi from "joi";  
+import { students } from '@prisma/client';
 
 export const STUDENT_CREATE_SCHEMA = Joi.object({
     email: Joi.string()
@@ -12,3 +13,8 @@ export const STUDENTDETAILS_CREATE_SCHEMA = Joi.object({
     lastname: Joi.string().required(),
     age: Joi.number().integer().min(0).required(),
 })
+
+
+export const COURSE_UPDATE_SCHEMA = Joi.object({
+  courseId: Joi.string().uuid().required(), 
+});

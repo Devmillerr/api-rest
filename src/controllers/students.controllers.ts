@@ -23,7 +23,7 @@ export class StudentController {
         });
 
         if (!student) return next(boom.notFound())
-            
+
         res.json({
             data: student,
         });
@@ -48,10 +48,12 @@ export class StudentController {
         })
       }
 
-      async updateDetails(req: Request, res: Response) {
+      async updateDetails(req: Request, res: Response, next: NextFunction) {
         const studentId = req.params.id;
         const getStudent = await studentServices.getOne({ id: studentId });
     
+        if (!getStudent) return next(boom.notFound('User not found'))
+
         if (getStudent && getStudent.studentdetailsId) {
             const dataStudentDetails = await studentServices.updateDetails(
                 { id: getStudent.studentdetailsId },
@@ -79,6 +81,36 @@ export class StudentController {
         }
     }
 
+    async updateCourse(req: Request, res: Response, next: NextFunction) {
+        const studentId = req.params.id;
+        const courseId = req.body.courseId; // Asegúrate de enviar el ID del curso en el cuerpo de la solicitud
+      
+        // Obtener el estudiante
+        const getStudent = await studentServices.getOne({ id: studentId });
+      
+        if (!getStudent) {
+          return next(boom.notFound('Student not found'));
+        }
+      
+        // Verificar si el estudiante ya está asociado con un curso
+        if (getStudent.courseId) {
+          // El estudiante ya tiene un curso asociado, actualizar la asociación
+          const updatedStudent = await studentServices.updateStudentCourse(studentId, courseId);
+          
+          res.json({
+            data: updatedStudent,
+          });
+        } else {
+          // El estudiante no tiene un curso asociado, asociar el curso
+          const updatedStudent = await studentServices.updateStudentCourse(studentId, courseId);
+          
+          res.json({
+            data: updatedStudent,
+          });
+        }
+      }
+
+      
     async remove(req: Request, res: Response) {
         const removeStudent = await studentServices.remove({
           id: req.params.id,

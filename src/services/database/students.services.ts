@@ -2,25 +2,31 @@ import { db } from '../db';
 import { students, Prisma } from '@prisma/client';
 
 export class StudentServices {
-  async create(data: Prisma.studentsCreateInput): Promise<students> {
-    return await db.students.create({
+  create(data: Prisma.studentsCreateInput): Promise<students> {
+    return db.students.create({
       data,
     });
   }
 
-  async getAll(where?: Prisma.studentsWhereInput): Promise<students[]> {
+  getAll(where?: Prisma.studentsWhereInput): Promise<students[]> {
     return db.students.findMany({
       where,
     });
   }
 
-  async getOne(where: Prisma.studentsWhereUniqueInput): Promise<students | null> {
+ 
+
+  getOne(where: Prisma.studentsWhereUniqueInput) {
     return db.students.findUnique({
       where,
-    });
+      include: {
+        studentdetails: true,
+        course: true,
+      },
+    })
   }
 
-  async update(where: Prisma.studentsWhereUniqueInput, data: Prisma.studentsUpdateInput) {
+   update(where: Prisma.studentsWhereUniqueInput, data: Prisma.studentsUpdateInput) {
     return db.students.update({
       where,
       data,
@@ -32,6 +38,7 @@ export class StudentServices {
       data,
     })
   }
+
 
   OneDetails(where: Prisma.studentDetailsWhereInput) {
     return db.studentDetails.findFirst({
@@ -49,9 +56,37 @@ export class StudentServices {
     })
   }
 
-  async remove(where: Prisma.studentsWhereUniqueInput) {
+ remove(where: Prisma.studentsWhereUniqueInput) {
     return db.students.delete({
       where,
     });
   }
+
+// Nueva función: Crear estudiante con curso asociado
+createStudentWithCourse(studentData: Prisma.studentsCreateInput, courseId: string): Promise<students> {
+  return db.students.create({
+    data: {
+      ...studentData,
+      course: {
+        connect: {
+          id: courseId,
+        },
+      },
+    },
+  });
+}
+
+// Nueva función: Actualizar estudiante para asociar curso
+updateStudentCourse(studentId: string, courseId: string): Promise<students> {
+  return db.students.update({
+    where: { id: studentId },
+    data: {
+      course: {
+        connect: {
+          id: courseId,
+        },
+      },
+    },
+  });
+}
 }
