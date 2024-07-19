@@ -1,6 +1,7 @@
-import { Response, Request } from "express";
+import { Response, Request, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { StudentServices } from '../services/database/students.services';
+import boom from '@hapi/boom'
 
 const studentServices = new StudentServices();
 
@@ -16,10 +17,13 @@ export class StudentController {
         });
     }
 
-    async getOne(req: Request, res: Response) {
+    async getOne(req: Request, res: Response, next: NextFunction) {
         const student = await studentServices.getOne({
             id: req.params.id,
         });
+
+        if (!student) return next(boom.notFound())
+            
         res.json({
             data: student,
         });
