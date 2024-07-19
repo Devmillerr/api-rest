@@ -14,8 +14,6 @@ export class StudentServices {
     });
   }
 
- 
-
   getOne(where: Prisma.studentsWhereUniqueInput) {
     return db.students.findUnique({
       where,
@@ -62,7 +60,7 @@ export class StudentServices {
     });
   }
 
-// Nueva función: Crear estudiante con curso asociado
+//NOTE Crear estudiante con curso asociado
 createStudentWithCourse(studentData: Prisma.studentsCreateInput, courseId: string): Promise<students> {
   return db.students.create({
     data: {
@@ -76,7 +74,7 @@ createStudentWithCourse(studentData: Prisma.studentsCreateInput, courseId: strin
   });
 }
 
-// Nueva función: Actualizar estudiante para asociar curso
+//NOTE función: Actualizar estudiante para asociar curso
 updateStudentCourse(studentId: string, courseId: string): Promise<students> {
   return db.students.update({
     where: { id: studentId },
